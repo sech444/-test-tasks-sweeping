@@ -48,9 +48,13 @@ export class SimulatedWalletService {
       throw new NotEnoughTokenError(`Insufficient ${token} balance`);
     }
 
-    if (sourceWallet.balances[token] <= amount) {
+    // --- THIS IS THE FIX ---
+    // Changed <= to < to allow sending the full balance
+    if (sourceWallet.balances[token] < amount) {
       throw new NotEnoughTokenError(`Insufficient ${token} balance`);
     }
+    // -----------------------
+
     const targetWallet = this.wallets.get(targetId);
     if (!targetWallet) throw new Error('Target wallet not found');
 
